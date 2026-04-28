@@ -9,7 +9,7 @@
     <meta name="author" content="Joshua Kochiyil">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -18,15 +18,15 @@
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="#home" class="nav-logo">
-                <span class="logo-bracket"></span>JK<span class="logo-bracket"></span>
+                <span class="logo-bracket">&lt;</span>JK<span class="logo-bracket">/&gt;</span>
             </a>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#home" class="nav-link active">Home</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#experience" class="nav-link">Experience</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
                 <li><a href="#skills" class="nav-link">Skills</a></li>
-                <li><a href="#awards" class="nav-link">Awards</a></li>
+                <li><a href="#achievements" class="nav-link">Achievements</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
             <button class="hamburger" id="hamburger" aria-label="Toggle navigation menu">
@@ -42,19 +42,22 @@
 
     <!-- Hero Section -->
     <section class="hero" id="home">
+        <canvas class="hero-canvas" id="neuralCanvas"></canvas>
         <div class="hero-bg-effects">
             <div class="hero-orb hero-orb-1"></div>
             <div class="hero-orb hero-orb-2"></div>
             <div class="hero-orb hero-orb-3"></div>
             <div class="hero-grid"></div>
+            <div class="hero-data-orb"></div>
         </div>
         <div class="hero-content">
-            <!-- <div class="hero-badge">
-                <span class="status-dot"></span>
-                <span>Available for opportunities</span>
-            </div> -->
+            <div class="hero-boot" id="heroBoot">
+                <div class="boot-line" id="bootLine1">&gt; Initializing Portfolio...<span class="boot-cursor" id="bootCursor1"></span></div>
+                <div class="boot-line" id="bootLine2">&gt; Loading modules...<span class="boot-cursor" id="bootCursor2"></span></div>
+                <div class="boot-line" id="bootLine3">&gt; System Ready.<span class="boot-cursor" id="bootCursor3"></span></div>
+            </div>
             <h1 class="hero-title">
-                Hi, I'm Joshua. I build intelligent systems that turn <span class="gradient-text">data into decisions</span> and <span class="gradient-text">ideas into impact.</span>
+                Hi, I'm Joshua. I combine <span class="gradient-text">AI, engineering, and execution</span> to build products people actually use.
             </h1>
             <p class="hero-subtitle">
                 Machine Learning Engineer & Full-Stack Developer crafting scalable, real-world solutions.
@@ -78,12 +81,6 @@
                     Resume
                 </a>
             </div>
-            <!-- <div class="hero-scroll-indicator">
-                <div class="scroll-mouse">
-                    <div class="scroll-wheel"></div>
-                </div>
-                <span>Scroll to explore</span>
-            </div> -->
         </div>
     </section>
 
@@ -95,16 +92,97 @@
                 <h2 class="section-title">About Me</h2>
                 <div class="section-line"></div>
             </div>
-            <div class="about-grid reveal">
-                <div class="about-content">
-                    <p class="about-text">
-                        I'm a graduate with Honours in <strong>Advanced Computing</strong>, specialising in <strong>Machine Learning</strong>, with a passion for building technology that actually makes a difference. 
-                    </p>
-                    <p class="about-text">
-                        I believe the best solutions come from strong collaboration, clear communication, and a genuine curiosity for how things work. When I'm not coding, you'll find me exploring new tools, reading about emerging tech, or thinking about how AI can be made more accessible and human-centered.
-                    </p>
-                    <div class="about-interests">
-                        <h3>What drives me</h3>
+            <div class="about-scanner-layout reveal" id="aboutScannerLayout">
+                <!-- LEFT: Avatar Scanner -->
+                <div class="avatar-scanner" id="avatarScanner">
+                    <div class="scanner-frame">
+                        <!-- Corner brackets -->
+                        <span class="scanner-corner scanner-corner-tl"></span>
+                        <span class="scanner-corner scanner-corner-tr"></span>
+                        <span class="scanner-corner scanner-corner-bl"></span>
+                        <span class="scanner-corner scanner-corner-br"></span>
+
+                        <!-- Scan line that sweeps -->
+                        <div class="scanner-beam" id="scannerBeam"></div>
+
+                        <!-- HUD overlay elements -->
+                        <div class="scanner-hud">
+                            <span class="hud-label hud-top-left">SUBJ_SCAN</span>
+                            <span class="hud-label hud-top-right" id="hudStatus">STANDBY</span>
+                            <span class="hud-label hud-bottom-left">ID: JK-2026</span>
+                            <span class="hud-label hud-bottom-right" id="hudProgress">0%</span>
+                        </div>
+
+                        <!-- Crosshair -->
+                        <div class="scanner-crosshair"></div>
+
+                        <!-- Avatar image -->
+                        <img src="avatar2.avif?v=2" alt="Joshua Kochiyil — Avatar" class="scanner-avatar" id="scannerAvatar" />
+                    </div>
+                    <!-- Status bar below scanner -->
+                    <div class="scanner-status-bar">
+                        <div class="scanner-status-fill" id="scannerStatusFill"></div>
+                    </div>
+                    <div class="scanner-status-text">
+                        <i class="fas fa-terminal"></i>
+                        <span id="scannerStatusText">awaiting_target...</span>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Scan Results -->
+                <div class="scan-results" id="scanResults">
+                    <div class="scan-terminal">
+                        <div class="scan-terminal-header">
+                            <div class="terminal-dots">
+                                <span class="dot dot-red"></span>
+                                <span class="dot dot-yellow"></span>
+                                <span class="dot dot-green"></span>
+                            </div>
+                            <span class="terminal-title">profile_scan.exe</span>
+                            <span class="scan-badge" id="scanBadge">PENDING</span>
+                        </div>
+
+                        <div class="scan-terminal-body" id="scanTerminalBody">
+                            <div class="scan-output-line scan-cmd">
+                                <span class="prompt">&gt;</span> Initiating subject scan...
+                            </div>
+
+                            <div class="scan-output-line scan-result" data-delay="300">
+                                <span class="scan-label">IDENTITY</span>
+                                <span class="scan-value">Joshua Kochiyil</span>
+                            </div>
+
+                            <div class="scan-output-line scan-result" data-delay="500">
+                                <span class="scan-label">DEGREE</span>
+                                <span class="scan-value">Bachelor of Advanced Computing (Honours)</span>
+                            </div>
+
+                            <div class="scan-output-line scan-result" data-delay="700">
+                                <span class="scan-label">UNIVERSITY</span>
+                                <span class="scan-value">Australian National University</span>
+                            </div>
+
+                            <div class="scan-output-line scan-result" data-delay="900">
+                                <span class="scan-label">ROLE</span>
+                                <span class="scan-value">ML Engineer & Full-Stack Developer</span>
+                            </div>
+
+                            <div class="scan-output-line scan-bio" data-delay="1200">
+                                <p>I'm passionate about building technology that actually makes a difference. The best solutions come from strong collaboration, clear communication, and a genuine curiosity for how things work.</p>
+                            </div>
+
+                            <div class="scan-output-line scan-bio" data-delay="1500">
+                                <p>When I'm not coding, you'll find me exploring new tools, reading about emerging tech, or thinking about how AI can be made more accessible and human-centered.</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Interest tags below scan results -->
+                    <div class="scan-interests" id="scanInterests">
+                        <h3 class="scan-interests-title">
+                            <i class="fas fa-crosshairs"></i> Detected Interests
+                        </h3>
                         <div class="interest-tags">
                             <span class="tag"><i class="fas fa-brain"></i> AI / Machine Learning</span>
                             <span class="tag"><i class="fas fa-code"></i> Full-Stack Development</span>
@@ -114,35 +192,120 @@
                             <span class="tag"><i class="fas fa-lightbulb"></i> Innovation</span>
                         </div>
                     </div>
-                </div>
-                <div class="about-stats">
-                    <div class="stat-card glass-card">
-                        <div class="stat-icon"><i class="fas fa-flask"></i></div>
-                        <div class="stat-value">Research</div>
-                        <div class="stat-label">ML at ANU</div>
-                    </div>
-                    <div class="stat-card glass-card">
-                        <div class="stat-icon"><i class="fas fa-building"></i></div>
-                        <div class="stat-value">Startup</div>
-                        <div class="stat-label">Full-Stack at Ohna</div>
-                    </div>
-                    <div class="stat-card glass-card">
-                        <div class="stat-icon"><i class="fas fa-graduation-cap"></i></div>
-                        <div class="stat-value">Honours</div>
-                        <div class="stat-label">Advanced Computing</div>
-                    </div>
-                    <div class="stat-card glass-card">
-                        <div class="stat-icon"><i class="fas fa-trophy"></i></div>
-                        <div class="stat-value">Awards</div>
-                        <div class="stat-label">Prize Winner</div>
+
+                    <!-- Stats row at the bottom -->
+                    <div class="scan-stats">
+                        <div class="scan-stat-item glass-card">
+                            <div class="stat-icon"><i class="fas fa-flask"></i></div>
+                            <div class="stat-value">Research</div>
+                            <div class="stat-label">ML at ANU</div>
+                        </div>
+                        <div class="scan-stat-item glass-card">
+                            <div class="stat-icon"><i class="fas fa-building"></i></div>
+                            <div class="stat-value">Startup</div>
+                            <div class="stat-label">Full-Stack at Ohna</div>
+                        </div>
+                        <div class="scan-stat-item glass-card">
+                            <div class="stat-icon"><i class="fas fa-graduation-cap"></i></div>
+                            <div class="stat-value">Honours</div>
+                            <div class="stat-label">Advanced Computing</div>
+                        </div>
+                        <div class="scan-stat-item glass-card">
+                            <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                            <div class="stat-value">Awards</div>
+                            <div class="stat-label">Prize Winner</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Projects Section -->
+    <section class="section section-alt" id="projects">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">What I've built</span>
+                <h2 class="section-title">Projects</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="projects-grid reveal">
+                <!-- Project 1 -->
+                <div class="project-card glass-card">
+                    <div class="project-card-header">
+                        <div class="project-icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/joshbk97/ExpenseAI" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <!-- <a href="#" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a> -->
+                        </div>
+                    </div>
+                    <h3 class="project-title">AI Expense Tracker</h3>
+                    <p class="project-impact">Automated receipt processing with 95%+ extraction accuracy</p>
+                    <p class="project-description">
+                        A full-stack AI-powered platform that converts receipt images into structured financial data using OCR and large language models. Features a natural language query system and an interactive analytics dashboard with real-time insights.
+                    </p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Remix</span>
+                        <span class="tech-tag">FastAPI</span>
+                        <span class="tech-tag">PostgreSQL</span>
+                        <span class="tech-tag">LLMs</span>
+                        <span class="tech-tag">Docker</span>
+                        <span class="tech-tag">Tailwind</span>
+                        <span class="tech-tag">Recharts</span>
+                    </div>
+                    <!-- <div class="project-cta">
+                        <a href="https://github.com/joshbk97" class="btn btn-sm btn-outline" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                        <a href="#" class="btn btn-sm btn-primary" target="_blank" rel="noopener noreferrer">
+                            <i class="fas fa-play"></i> Live Demo
+                        </a>
+                    </div> -->
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card glass-card">
+                    <div class="project-card-header">
+                        <div class="project-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/joshbk97/MADI" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <h3 class="project-title">MADI (Medical Analysis & Diagnostics Intelligence)</h3>
+                    <p class="project-impact">Multi-modal AI bridging diagnostics and human understanding</p>
+                    <p class="project-description">
+                        A multi-modal AI diagnostic platform integrating machine learning models with an LLM-powered chatbot to provide accessible, patient-friendly explanations of predictions. Designed to bridge the gap between AI diagnostics and human understanding.
+                    </p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Flask</span>
+                        <span class="tech-tag">FastAPI</span>
+                        <span class="tech-tag">Scikit-learn</span>
+                        <span class="tech-tag">REST APIs</span>
+                        <span class="tech-tag">PyTest</span>
+                    </div>
+                    <!-- <div class="project-cta">
+                        <a href="https://github.com/joshbk97" class="btn btn-sm btn-outline" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Experience Section -->
-    <section class="section section-alt" id="experience">
+    <section class="section" id="experience">
         <div class="container">
             <div class="section-header reveal">
                 <span class="section-tag">Where I've worked</span>
@@ -229,88 +392,6 @@
                             <span class="tech-tag">Flutter</span>
                             <span class="tech-tag">Firebase</span>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section class="section" id="projects">
-        <div class="container">
-            <div class="section-header reveal">
-                <span class="section-tag">What I've built</span>
-                <h2 class="section-title">Projects</h2>
-                <div class="section-line"></div>
-            </div>
-            <div class="projects-grid reveal">
-                <!-- Project 1 -->
-                <div class="project-card glass-card">
-                    <div class="project-card-header">
-                        <div class="project-icon">
-                            <i class="fas fa-receipt"></i>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/joshbk97" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a href="#" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="Live Demo">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <h3 class="project-title">AI Expense Tracker</h3>
-                    <p class="project-description">
-                        A full-stack AI-powered platform that converts receipt images into structured financial data using OCR and large language models. Features a natural language query system and an interactive analytics dashboard with real-time insights.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Remix</span>
-                        <span class="tech-tag">FastAPI</span>
-                        <span class="tech-tag">PostgreSQL</span>
-                        <span class="tech-tag">LLMs</span>
-                        <span class="tech-tag">Docker</span>
-                        <span class="tech-tag">Tailwind</span>
-                        <span class="tech-tag">Recharts</span>
-                    </div>
-                    <div class="project-cta">
-                        <a href="https://github.com/joshbk97" class="btn btn-sm btn-outline" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-github"></i> GitHub
-                        </a>
-                        <a href="#" class="btn btn-sm btn-primary" target="_blank" rel="noopener noreferrer">
-                            <i class="fas fa-play"></i> Live Demo
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Project 2 -->
-                <div class="project-card glass-card">
-                    <div class="project-card-header">
-                        <div class="project-icon">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/joshbk97" class="project-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
-                                <i class="fab fa-github"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <h3 class="project-title">MADI</h3>
-                    <p class="project-subtitle">Medical Analysis & Diagnostics Intelligence</p>
-                    <p class="project-description">
-                        A multi-modal AI diagnostic platform integrating machine learning models with an LLM-powered chatbot to provide accessible, patient-friendly explanations of predictions. Designed to bridge the gap between AI diagnostics and human understanding.
-                    </p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">Flask</span>
-                        <span class="tech-tag">FastAPI</span>
-                        <span class="tech-tag">Scikit-learn</span>
-                        <span class="tech-tag">REST APIs</span>
-                        <span class="tech-tag">PyTest</span>
-                    </div>
-                    <div class="project-cta">
-                        <a href="https://github.com/joshbk97" class="btn btn-sm btn-outline" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-github"></i> GitHub
-                        </a>
                     </div>
                 </div>
             </div>
@@ -415,32 +496,32 @@
         </div>
     </section>
 
-    <!-- Awards Section -->
-    <section class="section" id="awards">
+    <!-- Achievements Section -->
+    <section class="section" id="achievements">
         <div class="container">
             <div class="section-header reveal">
                 <span class="section-tag">Recognition</span>
-                <h2 class="section-title">Awards</h2>
+                <h2 class="section-title">Achievements</h2>
                 <div class="section-line"></div>
             </div>
-            <div class="awards-grid reveal">
-                <div class="award-card glass-card">
-                    <div class="award-icon">
+            <div class="achievements-grid reveal">
+                <div class="achievement-card glass-card">
+                    <div class="achievement-icon">
                         <i class="fas fa-award"></i>
                     </div>
-                    <div class="award-year">2024</div>
-                    <h3 class="award-title">McCusker Prize in Humanitarian Engineering</h3>
-                    <p class="award-description">
+                    <div class="achievement-year">2024</div>
+                    <h3 class="achievement-title">McCusker Prize in Humanitarian Engineering</h3>
+                    <p class="achievement-description">
                         Awarded for developing a technology-driven solution addressing food insecurity through the Ohna platform, demonstrating strong real-world impact and innovation in humanitarian technology.
                     </p>
                 </div>
-                <div class="award-card glass-card">
-                    <div class="award-icon">
+                <div class="achievement-card glass-card">
+                    <div class="achievement-icon">
                         <i class="fas fa-medal"></i>
                     </div>
-                    <div class="award-year">2024</div>
-                    <h3 class="award-title">ANUEC Hackathon Finalist</h3>
-                    <p class="award-description">
+                    <div class="achievement-year">2024</div>
+                    <h3 class="achievement-title">ANUEC Hackathon Finalist</h3>
+                    <p class="achievement-description">
                         Reached the final round of a competitive 24-hour hackathon with an AI healthcare solution, showcasing innovation, technical execution, and the ability to deliver under pressure.
                     </p>
                 </div>
@@ -455,6 +536,9 @@
                 <span class="section-tag">Let's connect</span>
                 <h2 class="section-title">Get In Touch</h2>
                 <div class="section-line"></div>
+            </div>
+            <div class="contact-headline reveal">
+                <h3>Have a project in mind? <span class="gradient-text">Let's build something great.</span></h3>
             </div>
             <p class="contact-intro reveal">
                 I'm always open to new opportunities, collaborations, and conversations. Whether you have a project in mind, a question, or just want to say hi — feel free to reach out.

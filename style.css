@@ -1136,6 +1136,10 @@ ul { list-style: none; }
     overflow: hidden;
 }
 
+.project-card:hover {
+    transform: none;
+}
+
 /* Animated top border */
 .project-card::before {
     content: '';
